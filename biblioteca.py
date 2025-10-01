@@ -1,21 +1,83 @@
+import csv
+from csv import reader
+
+
 def carica_da_file(file_path):
     """Carica i libri dal file"""
     # TODO
+    Biblioteca = []
+    try:
+        infile = open(file_path, "r")
+        infile.readline()
+        csvReader = reader(infile)
+        for record in csvReader:
+            dizionario = {}
+            dizionario['Titolo'] = record[0]
+            dizionario['Autore'] = record[1]
+            dizionario['Anno'] = record[2]
+            dizionario['Pagine'] = int(record[3])
+            dizionario['Sezione'] = int(record[4])
+            Biblioteca.append(dizionario)
+        infile.close()
+        return Biblioteca
+    except FileNotFoundError:
+        return None
 
 
 def aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path):
     """Aggiunge un libro nella biblioteca"""
     # TODO
+    for libro in biblioteca:
+        if libro["Titolo"] == titolo:
+            return None
+    else:
+        pass
+    if sezione not in range(1, 6):
+        return None
+    else:
+        pass
+
+    file = file_path
+
+    outfile = open(file, "a")
+
+    writer = csv.writer(outfile)
+
+    writer.writerow([titolo, autore, anno, pagine, sezione])
+
+    outfile.close()
+
+    return {"Titolo": titolo, "Autore": autore, "Anno": anno, "Pagine": pagine, "Sezione": sezione}
+
+
 
 
 def cerca_libro(biblioteca, titolo):
     """Cerca un libro nella biblioteca dato il titolo"""
     # TODO
 
+    for libro in biblioteca:
+        if libro['Titolo'] == titolo or libro['Titolo'].upper() == titolo.upper() or libro['Titolo'].lower() == titolo.lower():
+            return f"{libro['Titolo']}, {libro['Autore']}, {libro['Anno']}, {libro['Pagine']}, {libro['Sezione']}"
+    return None
+
 
 def elenco_libri_sezione_per_titolo(biblioteca, sezione):
     """Ordina i titoli di una data sezione della biblioteca in ordine alfabetico"""
     # TODO
+    if sezione not in range(1, 6):
+        print("Valore non presente")
+
+        return None
+
+    lista_libri = []
+
+    for libro in biblioteca:
+        if libro['Sezione'] == sezione:
+            lista_libri.append(libro['Titolo'])
+
+    lista_libri.sort()
+    return lista_libri
 
 
 def main():
@@ -54,6 +116,7 @@ def main():
                 print("Errore: inserire valori numerici validi per anno, pagine e sezione.")
                 continue
 
+            biblioteca = carica_da_file(file_path)
             libro = aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path)
             if libro:
                 print(f"Libro aggiunto con successo!")
@@ -97,4 +160,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
