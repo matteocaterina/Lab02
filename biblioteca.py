@@ -7,7 +7,7 @@ def carica_da_file(file_path):
     # TODO
     Biblioteca = []
     try:
-        infile = open(file_path, "r")
+        infile = open(file_path, "r", encoding="utf-8")
         numSezioni = infile.readline().strip()
         csvReader = reader(infile)
         for record in csvReader:
@@ -41,7 +41,7 @@ def aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path)
 
     file = file_path
 
-    outfile = open(file, "a")
+    outfile = open(file, "a", encoding="utf-8")
 
     writer = csv.writer(outfile)
 
@@ -73,7 +73,6 @@ def elenco_libri_sezione_per_titolo(biblioteca, sezione):
     for libro in biblioteca:
         if sezione not in range(1, libro['NumSezioni'] +1):
             print("Valore non presente")
-
             return None
 
         if libro['Sezione'] == sezione:
