@@ -8,13 +8,14 @@ def carica_da_file(file_path):
     Biblioteca = []
     try:
         infile = open(file_path, "r")
-        infile.readline()
+        numSezioni = infile.readline().strip()
         csvReader = reader(infile)
         for record in csvReader:
             dizionario = {}
+            dizionario['NumSezioni'] = int(numSezioni)
             dizionario['Titolo'] = record[0]
             dizionario['Autore'] = record[1]
-            dizionario['Anno'] = record[2]
+            dizionario['Anno'] = int(record[2])
             dizionario['Pagine'] = int(record[3])
             dizionario['Sezione'] = int(record[4])
             Biblioteca.append(dizionario)
@@ -28,14 +29,15 @@ def aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path)
     """Aggiunge un libro nella biblioteca"""
     # TODO
     for libro in biblioteca:
-        if libro["Titolo"] == titolo:
+        if libro["Titolo"] == titolo or libro['Titolo'].lower() == titolo.lower() or libro['Titolo'].upper() == titolo.upper():
             return None
-    else:
-        pass
-    if sezione not in range(1, 6):
-        return None
-    else:
-        pass
+        else:
+            pass
+
+        if sezione not in range(1, libro['NumSezioni'] +1):
+            return None
+        else:
+            pass
 
     file = file_path
 
@@ -65,14 +67,15 @@ def cerca_libro(biblioteca, titolo):
 def elenco_libri_sezione_per_titolo(biblioteca, sezione):
     """Ordina i titoli di una data sezione della biblioteca in ordine alfabetico"""
     # TODO
-    if sezione not in range(1, 6):
-        print("Valore non presente")
-
-        return None
 
     lista_libri = []
 
     for libro in biblioteca:
+        if sezione not in range(1, libro['NumSezioni'] +1):
+            print("Valore non presente")
+
+            return None
+
         if libro['Sezione'] == sezione:
             lista_libri.append(libro['Titolo'])
 
@@ -129,6 +132,9 @@ def main():
                 continue
 
             titolo = input("Inserisci il titolo del libro da cercare: ").strip()
+
+            biblioteca = carica_da_file(file_path)
+
             risultato = cerca_libro(biblioteca, titolo)
             if risultato:
                 print(f"Libro trovato: {risultato}")
@@ -146,6 +152,7 @@ def main():
                 print("Errore: inserire un valore numerico valido.")
                 continue
 
+            biblioteca = carica_da_file(file_path)
             titoli = elenco_libri_sezione_per_titolo(biblioteca, sezione)
             if titoli is not None:
                 print(f'\nSezione {sezione} ordinata:')
