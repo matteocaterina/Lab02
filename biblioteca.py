@@ -29,7 +29,7 @@ def aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path)
     """Aggiunge un libro nella biblioteca"""
     # TODO
     for libro in biblioteca:
-        if libro["Titolo"] == titolo or libro['Titolo'].lower() == titolo.lower() or libro['Titolo'].upper() == titolo.upper():
+        if libro['Titolo'].lower() == titolo.lower() :
             return None
         else:
             pass
@@ -59,7 +59,7 @@ def cerca_libro(biblioteca, titolo):
     # TODO
 
     for libro in biblioteca:
-        if libro['Titolo'] == titolo or libro['Titolo'].upper() == titolo.upper() or libro['Titolo'].lower() == titolo.lower():
+        if libro['Titolo'].lower() == titolo.lower():
             return f"{libro['Titolo']}, {libro['Autore']}, {libro['Anno']}, {libro['Pagine']}, {libro['Sezione']}"
     return None
 
