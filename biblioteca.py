@@ -8,11 +8,10 @@ def carica_da_file(file_path):
     Biblioteca = []
     try:
         infile = open(file_path, "r", encoding="utf-8")
-        numSezioni = infile.readline().strip()
+        infile.readline()
         csvReader = reader(infile)
         for record in csvReader:
             dizionario = {}
-            dizionario['NumSezioni'] = int(numSezioni)
             dizionario['Titolo'] = record[0]
             dizionario['Autore'] = record[1]
             dizionario['Anno'] = int(record[2])
@@ -28,30 +27,39 @@ def carica_da_file(file_path):
 def aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path):
     """Aggiunge un libro nella biblioteca"""
     # TODO
+
     for libro in biblioteca:
         if libro['Titolo'].lower() == titolo.lower() :
             return None
         else:
             pass
 
-        if sezione not in range(1, libro['NumSezioni'] +1):
+    file = file_path
+
+    try:
+        infile = open(file, "r", encoding="utf-8")
+        numSezioni = int(infile.readline().strip())
+
+        if sezione not in range(1, numSezioni + 1):
             return None
         else:
             pass
 
-    file = file_path
+        infile.close()
 
-    outfile = open(file, "a", encoding="utf-8")
+    except FileNotFoundError:
+        return None
 
-    writer = csv.writer(outfile)
+    try:
+        outfile = open(file, "a", encoding="utf-8")
+        writer = csv.writer(outfile)
+        writer.writerow([titolo, autore, anno, pagine, sezione])
+        outfile.close()
 
-    writer.writerow([titolo, autore, anno, pagine, sezione])
-
-    outfile.close()
+    except FileNotFoundError:
+        return None
 
     return {"Titolo": titolo, "Autore": autore, "Anno": anno, "Pagine": pagine, "Sezione": sezione}
-
-
 
 
 def cerca_libro(biblioteca, titolo):
@@ -71,12 +79,14 @@ def elenco_libri_sezione_per_titolo(biblioteca, sezione):
     lista_libri = []
 
     for libro in biblioteca:
-        if sezione not in range(1, libro['NumSezioni'] +1):
-            print("Valore non presente")
-            return None
-
         if libro['Sezione'] == sezione:
             lista_libri.append(libro['Titolo'])
+
+
+    if not lista_libri:
+        print("Valore non presente")
+        return None
+
 
     lista_libri.sort()
     return lista_libri
